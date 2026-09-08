@@ -13,6 +13,8 @@ El resto de las funciones deben diseñarlas y programarlas ustedes,
 respetando los requerimientos técnicos de la consigna.
 """
 
+#------------ OPCIONES DEL MENU - START -------------#
+
 def pedir_entero_en_rango(mensaje, minimo, maximo):
     """Solicita al usuario un número entero dentro de un rango, reintentando
     hasta que la entrada sea válida.
@@ -30,6 +32,28 @@ def pedir_entero_en_rango(mensaje, minimo, maximo):
         entrada = input(mensaje)
     return int(entrada)
 
+def opciones():
+    """Muestra las opciones disponibles que tiene el programa"""
+    print("\n=== KIOSCO EL CAMPUS ===")
+    print("1) Registrar una venta")
+    print("2) Ver resumen del día")
+    print("3) Cerrar caja y salir")
+    opcion = pedir_entero_en_rango("Elija una opción: ", 1, 3)
+    return validar_opciones(opcion)
+
+def validar_opciones(opcion):
+    """Valida la opción que ingresa Don Ramón para realizar: Registrar una venta, Ver resumen del día o Cerrar la caja y salir."""
+    if opcion == 1:
+        print("Opción en construcción...")
+        return opcion
+    elif opcion == 2:
+        print("Opción en construcción...")
+        return opcion
+    else:
+        opcion = comprobar()
+        return opcion
+
+#------------ OPCIONES DEL MENU - END -------------#
 
 # =====================================================================
 # FUNCIONES A DESARROLLAR POR EL GRUPO
@@ -52,6 +76,8 @@ def pedir_entero_en_rango(mensaje, minimo, maximo):
 # las funciones de mostrar imprimen y no calculan.
 # =====================================================================
 
+#------------ Cuenta Regresiva - START -------------#
+
 def cuenta_regresiva(cuenta):
     """Realiza la cuenta atrás cuando Don Ramón ingresa la opción 'si'"""
     if cuenta == 0: 
@@ -63,17 +89,22 @@ def mostrar_cuenta(cuenta):
     """Muestra los números de la cuenta atrás"""
     print(cuenta)
 
+# def resuem_final_del_dia():
+    
+
 def comprobar():
     """Comprueba si Don Ramón quiere finalizar el registro de las ventas de la jornada"""
     continuar = input("¿Desea continuar con el cierre? (Si/No): ").lower()
     while (continuar != "si" and continuar != "sí") and continuar != "no":
-        print(f"Entrada inválida. Ingrese la opción: 'Si' para continuar, 'No' para salir.")
+        print("Entrada inválida. Ingrese la opción: 'Si' para continuar, 'No' para salir.")
         continuar = input("Si/No: ").lower()
     if continuar == "si" or continuar == "sí":
         print(cuenta_regresiva(5))
         return 3
     elif continuar == "no":
         return 0
+
+#------------ Cuenta Regresiva - END -------------#
 
 # =====================================================================
 # PROGRAMA PRINCIPAL
@@ -84,27 +115,11 @@ def comprobar():
 # =====================================================================
 def main():
     """Punto de entrada del programa: menú principal del kiosco."""
-
-    # TODO: definir los acumuladores del día (variables simples):
-    #       total recaudado, cantidad de ventas, venta más alta,
-    #       totales por categoría y contadores por medio de pago.
-
+    
     opcion = 0
     while opcion != 3:
-        # TODO: reemplazar por una función que muestre el menú
-        print("\n=== KIOSCO EL CAMPUS ===")
-        print("1) Registrar una venta")
-        print("2) Ver resumen del día")
-        print("3) Cerrar caja y salir")
-        opcion = pedir_entero_en_rango("Elija una opción: ", 1, 3)
-        if opcion == 1:
-            print("Opción en construcción...")
-        elif opcion == 2:
-            print("Opción en construcción...")
-        else:
-            opcion = comprobar()
-
+        opcion = opciones()
+        
     print("¡Hasta mañana, Don Ramón!")
-
-
+    
 main()
