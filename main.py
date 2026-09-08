@@ -56,10 +56,10 @@ def cuenta_regresiva(cuenta):
     """Realiza la cuenta atrás cuando Don Ramón ingresa la opción 'si'"""
     if cuenta == 0: 
         return "¡Caja cerrada!"
-    mostrar_opcion(cuenta) # Llama a la función 'mostrar_opcion' para mostrar los números de la cuenta regresiva
+    mostrar_cuenta(cuenta) # Llama a la función 'mostrar_cuenta' para imprimir los números de la cuenta regresiva
     return cuenta_regresiva(cuenta - 1) 
 
-def mostrar_opcion(cuenta):
+def mostrar_cuenta(cuenta):
     """Muestra los números de la cuenta atrás"""
     print(cuenta)
 
