@@ -53,20 +53,23 @@ def pedir_entero_en_rango(mensaje, minimo, maximo):
 # =====================================================================
 
 def cuenta_regresiva(cuenta):
-    if cuenta == 0:
+    """Realiza la cuenta atrás cuando Don Ramón ingresa la opción 'si'"""
+    if cuenta == 0: 
         return "¡Caja cerrada!"
-    mostrar_opcion(cuenta)
-    return cuenta_regresiva(cuenta -1)
+    mostrar_opcion(cuenta) # Llama a la función 'mostrar_opcion' para mostrar los números de la cuenta regresiva
+    return cuenta_regresiva(cuenta - 1) 
 
 def mostrar_opcion(cuenta):
+    """Muestra los números de la cuenta atrás"""
     print(cuenta)
 
 def comprobar():
+    """Comprueba si Don Ramón quiere finalizar el registro de las ventas de la jornada"""
     continuar = input("¿Desea continuar con el cierre? (Si/No): ").lower()
-    while continuar != "si" and continuar != "no":
+    while (continuar != "si" and continuar != "sí") and continuar != "no":
         print(f"Entrada inválida. Ingrese la opción: 'Si' para continuar, 'No' para salir.")
         continuar = input("Si/No: ").lower()
-    if continuar == "si":
+    if continuar == "si" or continuar == "sí":
         print(cuenta_regresiva(5))
         return 3
     elif continuar == "no":
