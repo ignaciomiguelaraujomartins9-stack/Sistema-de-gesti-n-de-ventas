@@ -101,9 +101,11 @@ def cuenta_regresiva(cuenta):
     recursividad.
     Devuelve 'Caja cerrada' luego de que el caso base se ejecute. 
     """
+    if cuenta == 5:
+        resuem_del_dia() # Imprime una única vez el resumen del día
     if cuenta == 0: 
         return "¡Caja cerrada!"
-    mostrar_cuenta(cuenta) # Llama a la función 'mostrar_cuenta' para imprimir los números de la cuenta regresiva
+    mostrar_cuenta(cuenta) # Imprime los números de la cuenta regresiva
     return cuenta_regresiva(cuenta - 1) 
 
 def mostrar_cuenta(cuenta):
@@ -115,8 +117,86 @@ def mostrar_cuenta(cuenta):
     """
     print(cuenta)
 
-# def resuem_final_del_dia():
+#------------ SOLO DE PRUEBA - START -------------#
+
+import random
+
+ingreso = 0
+cantidad_ventas = random.randint(1,1000)
+total_recaudado = 0
+importe_promedio_por_venta = 0
+importe_de_la_venta_mas_alta = 0
+total_recaudado_por_categoria = 0
+efectivo_cantidad = 0
+debito_cantidad = 0
+credito_cantidad = 0
+total_recaudado_golosina = 0
+total_recaudado_bebidas = 0 
+total_recaudado_almacen = 0
+total_recaudado_libreria = 0 
+
+def aleatorio(importe_promedio_por_venta,efectivo_cantidad,debito_cantidad,credito_cantidad,total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria):
+    ran = random.randint(1,3)
+    ran1 = random.randint(1,4)
+    if ran == 1:
+        efectivo_cantidad += 1
+    elif ran == 2:
+        debito_cantidad += 1
+    else: 
+        credito_cantidad += 1
+    if ran1 == 1:
+        total_recaudado_golosina += importe_promedio_por_venta
+    elif ran1 == 2:
+        total_recaudado_bebidas += importe_promedio_por_venta
+    elif ran1 == 3:
+        total_recaudado_almacen += importe_promedio_por_venta
+    else:
+        total_recaudado_libreria += importe_promedio_por_venta
+    return efectivo_cantidad, debito_cantidad, credito_cantidad, total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria
+
+for i in range(cantidad_ventas):
+    ingreso = random.randint(100, 100000)
     
+    total_recaudado += ingreso
+    
+    importe_promedio_por_venta = total_recaudado / cantidad_ventas
+    
+    if ingreso > importe_de_la_venta_mas_alta:
+        
+        importe_de_la_venta_mas_alta = ingreso
+        
+    efectivo_cantidad,debito_cantidad,credito_cantidad,total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria = aleatorio(importe_promedio_por_venta,efectivo_cantidad,debito_cantidad,credito_cantidad,total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria)
+
+#------------ SOLO DE PRUEBA - END -------------#
+
+def resuem_del_dia():
+    print(" ")
+    print("===================================================================")
+    print("Cantidad de ventas realizadas y total recaudado: ")
+    print(f"Cantidad de ventas: {cantidad_ventas}")
+    print(f"Total recaudado: {total_recaudado}")
+    print("===================================================================")
+    print(f"Importe promedio por venta: {int(importe_promedio_por_venta)}")
+    print(f"Importe de la venta más alta: {int(importe_de_la_venta_mas_alta)}")
+    print("===================================================================")
+    print(f"Total recaudado por cada categoría de producto: ")
+    print(f"Golosinas: {int(total_recaudado_golosina)}")
+    print(f"Bebidas: {int(total_recaudado_bebidas)}")
+    print(f"Almacén: {int(total_recaudado_almacen)}")
+    print(f"Libería: {int(total_recaudado_libreria)}")
+    print("===================================================================")
+    print("Método de pago más usado:")
+    print(metodo_mas_usado())
+    print("===================================================================")
+    print(" ")
+
+def metodo_mas_usado():
+    if efectivo_cantidad > credito_cantidad and efectivo_cantidad > debito_cantidad:
+        return f"Efectivo con '{efectivo_cantidad}' usos."
+    elif credito_cantidad > efectivo_cantidad and credito_cantidad > debito_cantidad:
+        return f"Credito con '{credito_cantidad}' usos."
+    else: 
+        return f"Debito con '{debito_cantidad}' usos."
 
 def comprobar():
     """
@@ -146,14 +226,13 @@ def comprobar():
 # el ciclo del menú y las llamadas a funciones. Nada de lógica de
 # cálculo ni validaciones sueltas acá.
 # =====================================================================
-
 def main():
     """Punto de entrada del programa: menú principal del kiosco."""
     
     opcion = 0
     while opcion != 3:
         opcion = opciones()
-        
+
     print("¡Hasta mañana, Don Ramón!")
 
 main()
