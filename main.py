@@ -101,7 +101,9 @@ def cuenta_regresiva(cuenta):
     recursividad.
     Devuelve 'Caja cerrada' luego de que el caso base se ejecute. 
     """
-    if cuenta == 5:
+    if cuenta == 5 and cantidad_ventas == 0:
+        no_ventas()
+    elif cuenta == 5 and cantidad_ventas > 0:
         resuem_del_dia() # Imprime una única vez el resumen del día
     if cuenta == 0: 
         return "¡Caja cerrada!"
@@ -122,7 +124,7 @@ def mostrar_cuenta(cuenta):
 import random
 
 ingreso = 0
-cantidad_ventas = random.randint(1,1000)
+cantidad_ventas = random.randint(0,1000)
 total_recaudado = 0
 importe_promedio_por_venta = 0
 importe_de_la_venta_mas_alta = 0
@@ -168,6 +170,13 @@ for i in range(cantidad_ventas):
     efectivo_cantidad,debito_cantidad,credito_cantidad,total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria = aleatorio(importe_promedio_por_venta,efectivo_cantidad,debito_cantidad,credito_cantidad,total_recaudado_golosina,total_recaudado_bebidas, total_recaudado_almacen, total_recaudado_libreria)
 
 #------------ SOLO DE PRUEBA - END -------------#
+
+def no_ventas():
+    print(" ")
+    print("===================================================================")
+    print("No se realizaron ventas este día.")
+    print("===================================================================")
+    print(" ")
 
 def resuem_del_dia():
     print(" ")
