@@ -19,8 +19,8 @@ def descuento_monto(precio, cantidad):
     """Calcula el descuento si se supera el monto minimo de descuento.
     
     Recibe: precio (int) y cantidad (int)
-    Devuelve: subtotal (variable sin el descuento aplicado) (int), descuento (int), 
-    subtotal_d (variable con el descuento aplicado) (int)
+    Devuelve: subtotal (variable sin el descuento aplicado) (int), descuento (float), 
+    subtotal_d (variable con el descuento aplicado) (float)
     """
     descuento = 0
     subtotal = precio * cantidad
@@ -33,8 +33,8 @@ def descuento_monto(precio, cantidad):
 def ajuste_medio_pago(subtotal_d, medio_pago):
     """Realiza el ajuste según el medio de pago ingresado.
     
-    Recibe: subtotal_d (Subtotal con descuento de monto aplicado) (int), medio_pago (int)
-    Devuelve: Importe final (int), descuento por efectivo (int), recargo por crédito (int) 
+    Recibe: subtotal_d (Subtotal con descuento de monto aplicado) (float), medio_pago (int)
+    Devuelve: Importe final (float), descuento por efectivo (float) , recargo por crédito (float) 
     """
     importe_final = subtotal_d
     descuento_efectivo = 0
@@ -47,7 +47,7 @@ def ajuste_medio_pago(subtotal_d, medio_pago):
         importe_final = subtotal_d + recargo
     return importe_final, descuento_efectivo, recargo
 
-def mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final):
+def mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo):
     """Muestra en pantalla el ticket con toda la información calculada por las otras funciones"""
 
     match categoria:
@@ -71,7 +71,20 @@ def mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d
     elif medio_pago == 3:
         print(f"Recargo por crédito ({PORCENTAJE_RECARGO_CREDITO}% sobre ${subtotal_d}): +${recargo}")
     print(f"Importe final: ${importe_final}")
+    print(f"Codigo de la suerte: {codigo}")
     print("================================")
+
+def codigo_suerte(importe):
+    """Desafío del código de la suerte: Algoritmo recursivo que suma los dígitos
+    del importe final hasta que quede 1 solo dígito
+    Recibe: Importe final (float)
+    Devuelve: Codigo de la suerte (int)
+    """
+    if importe < 10:
+        return importe
+    else:
+        suma = (importe % 10) + codigo_suerte(importe // 10)
+    return codigo_suerte(int(suma)) 
 
 def menu():
     """Menu principal donde se ingresan las opciones para registrar ventas, 
@@ -104,7 +117,8 @@ def menu():
 
                 subtotal, descuento, subtotal_d = descuento_monto(precio, cantidad)
                 importe_final, descuento_efectivo, recargo = ajuste_medio_pago(subtotal_d, medio_pago)
-                mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final)
+                codigo = codigo_suerte(importe_final)
+                mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo)
             case 3:
                 print("Nos vemos giles")
             case _:
