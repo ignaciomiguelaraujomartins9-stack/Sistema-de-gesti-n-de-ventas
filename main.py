@@ -100,12 +100,69 @@ def mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d
     print(f"Codigo de la suerte: {codigo}")
     print("================================")
 
+def mostrar_opciones(opcion):
+    print("=== KIOSCO EL CAMPUS ===")
+    print("1. Registrar una venta")
+    print("2. Ver resumen del día")
+    print("3. Cerrar caja y salir")
+    opcion = pedir_numero("Elija una opción (1/2/3): ", 1, 3)
+    return opcion
+
+def opciones(opcion, cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3):
+    match opcion:
+        case 1:
+            print("1. Golosinas")
+            print("2. Bebidas")
+            print("3. Almacén")
+            print("4. Librería")
+            categoria = pedir_numero("Elija la categoría del producto (1/2/3/4): ", 1, 4)
+            precio = pedir_numero("Ingrese el precio del producto: ", 1, float('inf')) # Se usa float('inf') como tope para precio y cantidades de producto
+            cantidad = pedir_numero("Ingrese la cantidad de producto: ", 1, float('inf'))
+            print("============")
+            print("1. Efectivo")
+            print("2. Débito")
+            print("3. Crédito")
+            medio_pago = pedir_numero("Ingrese el medio de pago (1/2/3): ", 1, 3)
+            subtotal, descuento, subtotal_d = descuento_monto(precio, cantidad)
+            importe_final, descuento_efectivo, recargo = ajuste_medio_pago(subtotal_d, medio_pago)
+            codigo = codigo_suerte(int(importe_final))
+            mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo)
+            cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3 = acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, cantidad, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago)
+            return cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, opcion
+        case 2:
+            print(" ")
+            print("===========================================================================")
+            if verificar_entradas(cantidad_total):
+                resumen_del_dia(cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3)
+            else:
+                print("Aún no se realizaron ingresos")
+            print("===========================================================================")
+            print(" ")
+            return cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, opcion
+        case 3:
+            print("")
+            if verificar_cierre() == 3:
+                if verificar_entradas(cantidad_total):
+                    resumen_del_dia(cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3)
+                else:
+                    print(" ")
+                    print("===================================================================")
+                    print("No se realizaron ventas este día.")
+                    print("===================================================================")
+                    print(" ")
+                print(cuenta_regresiva(5))
+                cuenta_regresiva_iterativo(5)
+            else:
+                opcion = 0
+                print(" ")
+            return cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, opcion
+
 #------------ CODIGO DE LA SUERTE - START -------------#
 
 def codigo_suerte(importe):
     """Desafío del código de la suerte: Algoritmo recursivo que suma los dígitos
     del importe final hasta que quede 1 solo dígito
-    Recibe: Importe final (float)
+    Recibe: Importe final (int)
     
     Devuelve: Codigo de la suerte (int)
     
@@ -311,58 +368,8 @@ def menu():
     ventas_pago1, ventas_pago2, ventas_pago3 = 0, 0, 0
     
     while opcion != 3:
-        print("=== KIOSCO EL CAMPUS ===")
-        print("1. Registrar una venta")
-        print("2. Ver resumen del día")
-        print("3. Cerrar caja y salir")
-        opcion = pedir_numero("Elija una opción (1/2/3): ", 1, 3)
-        match opcion:
-            case 1:
-                print("1. Golosinas")
-                print("2. Bebidas")
-                print("3. Almacén")
-                print("4. Librería")
-                categoria = pedir_numero("Elija la categoría del producto (1/2/3/4): ", 1, 4)
-                precio = pedir_numero("Ingrese el precio del producto: ", 1, float('inf')) # Se usa float('inf') como tope para precio y cantidades de producto
-                cantidad = pedir_numero("Ingrese la cantidad de producto: ", 1, float('inf'))
-
-                print("============")
-                print("1. Efectivo")
-                print("2. Débito")
-                print("3. Crédito")
-                medio_pago = pedir_numero("Ingrese el medio de pago (1/2/3): ", 1, 3)
-
-                subtotal, descuento, subtotal_d = descuento_monto(precio, cantidad)
-                importe_final, descuento_efectivo, recargo = ajuste_medio_pago(subtotal_d, medio_pago)
-                codigo = codigo_suerte(int(importe_final))
-                mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo)
-
-                cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3 = acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, cantidad, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago)
-            case 2:
-                print(" ")
-                print("===========================================================================")
-                if verificar_entradas(cantidad_total):
-                    resumen_del_dia(cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3)
-                else:
-                    print("Aún no se realizaron ingresos")
-                print("===========================================================================")
-                print(" ")
-            case 3:
-                print("")
-                if verificar_cierre() == 3:
-                    if verificar_entradas(cantidad_total):
-                        resumen_del_dia(cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3)
-                    else:
-                        print(" ")
-                        print("===================================================================")
-                        print("No se realizaron ventas este día.")
-                        print("===================================================================")
-                        print(" ")
-                    print(cuenta_regresiva(5))
-                    cuenta_regresiva_iterativo(5)
-                else:
-                    opcion = 0
-                    print(" ")
+        opcion = mostrar_opciones(opcion)
+        cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, opcion = opciones(opcion, cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3)
     print("¡Hasta mañana, Don Ramón!")
 
 menu()
