@@ -25,7 +25,7 @@ def pedir_numero(mensaje, min, max):
 
     Recibe: mensaje (str) a mostrar, minimo (int) y máximo (int) permitido del número
     
-    Retorna: el número ya validado dentro de el rango (int)
+    Devuelve: el número ya validado dentro de el rango (int)
 
     ."""
     entrada = input(mensaje)
@@ -413,7 +413,7 @@ def acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, importe
 def menu():
     """Menu principal donde se ingresan las opciones para registrar ventas, ver resumen del día y cerrar caja
     
-    Recibe: las diferentes opciones posibles que tiene el sistema.
+    Recibe: no recibe parámetros.
     
     Devuelve: no devuelve nada. Imprime un mensaje de despedida.
     
