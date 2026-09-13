@@ -219,7 +219,7 @@ def codigo_suerte(importe):
     """Desafío del código de la suerte: Algoritmo recursivo que suma los dígitos
     del importe final hasta que quede 1 solo dígito
     
-    Recibe: Importe final (float)
+    Recibe: Importe final (int)
     
     Devuelve: Codigo de la suerte (int)
     
@@ -268,19 +268,19 @@ def cuenta_regresiva(cuenta):
     mostrar_cuenta(cuenta)
     return cuenta_regresiva(cuenta - 1)
 
-def cuenta_regresiva_iterativo(cuenta):
-    """
-    Realiza la cuenta atrás (de forma iterativa) cuando Don Ramón ingresa la opción 'si'.
+# def cuenta_regresiva_iterativo(cuenta):
+#     """
+#     Realiza la cuenta atrás (de forma iterativa) cuando Don Ramón ingresa la opción 'si'.
 
-    Recibe: el parámetro 'cuenta' (int)
+#     Recibe: el parámetro 'cuenta' (int)
     
-    Devuelve: No devuelve nada, solo imprime la cuenta regresiva e imprime Caja cerrada.
+#     Devuelve: No devuelve nada, solo imprime la cuenta regresiva e imprime Caja cerrada.
     
-    ."""
-    while cuenta > 0:
-        mostrar_cuenta(cuenta)
-        cuenta -= 1
-    else: print("¡Caja cerrada!") 
+#     ."""
+#     while cuenta > 0:
+#         mostrar_cuenta(cuenta)
+#         cuenta -= 1
+#     else: print("¡Caja cerrada!") 
 
 def mostrar_cuenta(cuenta):
     """
