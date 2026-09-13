@@ -39,8 +39,8 @@ def descuento_monto(precio, cantidad):
 
     Recibe: precio (int) y cantidad (int)
     
-    Devuelve: subtotal (variable sin el descuento aplicado) (int), descuento (int),
-    subtotal_d (variable con el descuento aplicado) (int)
+    Devuelve: subtotal (variable sin el descuento aplicado) (int), descuento (float),
+    subtotal_d (variable con el descuento aplicado) (float)
     
     ."""
     descuento = 0
@@ -54,9 +54,9 @@ def descuento_monto(precio, cantidad):
 def ajuste_medio_pago(subtotal_d, medio_pago):
     """Realiza el ajuste según el medio de pago ingresado.
 
-    Recibe: subtotal_d (Subtotal con descuento de monto aplicado) (int), medio_pago (int)
+    Recibe: subtotal_d (Subtotal con descuento de monto aplicado) (float), medio_pago (int)
     
-    Devuelve: Importe final (int), descuento por efectivo (int), recargo por crédito (int)
+    Devuelve: Importe final (float), descuento por efectivo (float), recargo por crédito (float)
     
     ."""
     importe_final = subtotal_d
@@ -219,7 +219,7 @@ def codigo_suerte(importe):
     """Desafío del código de la suerte: Algoritmo recursivo que suma los dígitos
     del importe final hasta que quede 1 solo dígito
     
-    Recibe: Importe final (int)
+    Recibe: Importe final (float)
     
     Devuelve: Codigo de la suerte (int)
     
@@ -268,19 +268,19 @@ def cuenta_regresiva(cuenta):
     mostrar_cuenta(cuenta)
     return cuenta_regresiva(cuenta - 1)
 
-# def cuenta_regresiva_iterativo(cuenta):
-#     """
-#     Realiza la cuenta atrás (de forma iterativa) cuando Don Ramón ingresa la opción 'si'.
+def cuenta_regresiva_iterativo(cuenta):
+    """
+    Realiza la cuenta atrás (de forma iterativa) cuando Don Ramón ingresa la opción 'si'.
 
-#     Recibe: el parámetro 'cuenta' (int)
+    Recibe: el parámetro 'cuenta' (int)
     
-#     Devuelve: No devuelve nada, solo imprime la cuenta regresiva e imprime Caja cerrada.
+    Devuelve: No devuelve nada, solo imprime la cuenta regresiva e imprime Caja cerrada.
     
-#     ."""
-#     while cuenta > 0:
-#         print(cuenta)
-#         cuenta -= 1
-#     else: print("¡Caja cerrada!") 
+    ."""
+    while cuenta > 0:
+        mostrar_cuenta(cuenta)
+        cuenta -= 1
+    else: print("¡Caja cerrada!") 
 
 def mostrar_cuenta(cuenta):
     """
