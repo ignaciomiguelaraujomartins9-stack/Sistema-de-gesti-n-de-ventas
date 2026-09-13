@@ -241,11 +241,11 @@ def verificar_cierre():
     Devuelve: el número correspondiente a la opción elegida.
     
     ."""
-    continuar = input("¿Desea continuar con el cierre? (Si/No): ").lower()
-    while (continuar != "si" and continuar != "sí") and continuar != "no":
+    continuar = input("¿Desea continuar con el cierre? (Si/No): ").lower().strip()
+    while (continuar != "si" and continuar != "sí" and continuar != "s") and (continuar != "no" and continuar != "n"):
         print("Entrada inválida. Ingrese la opción: 'Si' para continuar, 'No' para salir.")
-        continuar = input("Si/No: ").lower()
-    if continuar == "si" or continuar == "sí":
+        continuar = input("Si/No: ").lower().strip()
+    if continuar == "si" or continuar == "sí" or continuar == "s":
         return 3
     return 0
 
