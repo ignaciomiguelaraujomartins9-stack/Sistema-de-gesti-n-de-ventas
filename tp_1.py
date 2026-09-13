@@ -164,7 +164,7 @@ def ingresar_venta(opcion, cantidad_total, dinero_total, importe_promedio_por_ve
     importe_final, descuento_efectivo, recargo = ajuste_medio_pago(subtotal_d, medio_pago)
     codigo = codigo_suerte(round(importe_final))
     mostrar_ticket(cantidad, precio, categoria, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo)
-    cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3 = acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, cantidad, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago)
+    cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3 = acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago)
     return cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, opcion
 
 def mostrar_resumen(opcion, cantidad_total, dinero_total, importe_promedio_por_venta, mayor_venta, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3):
@@ -376,7 +376,7 @@ def resumen_del_dia(cantidad, total, promedio_venta, mayor_venta, cat1, cat2, ca
             print(f"Crédito con {ventas_pago3} uso/s")
     print("===================================================================")
 
-def acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, cantidad, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago):
+def acumulador(cantidad_total, dinero_total, importe_promedio_por_venta, importe_final, mayor_venta, categoria, total_cat1, total_cat2, total_cat3, total_cat4, ventas_pago1, ventas_pago2, ventas_pago3, medio_pago):
     """
     Acumula todas las variables calculadas por tipo para luego imprimirlas en el resumen del día.
     
