@@ -60,17 +60,41 @@ def catalogo_inicial():
 
 #------------ CATALOGO - END -------------#
 
-# =====================================================================
-# HISTORIAL DE VENTAS, CONSTANTES + RANKING
-# =====================================================================
+#------------ HISTORIAL DE VENTAS, CONSTANTES + RANKING - START -------------#
 
 historial_ventas = []
 NRO_VENTA, COD_PROD, CANTIDAD, MEDIO_PAGO, IMPORTE_FINAL = 0, 1, 2, 3, 4
 RANK_NOM, RANK_CANT, RANK_IMP = 0, 1, 2
 
+#------------ HISTORIAL DE VENTAS, CONSTANTES + RANKING - END -------------#
+
+#------------ ACUMULADOR, VENTA MAS GRANDE, CATEGORIA TOTAL, MEDIO DE PAGO TOTAL - START -------------#
+
+CANTIDAD_VENTAS, TOTAL_RECAUDADO, IMPORTE_PROMEDIO = 0,1,2
+
+VENTA_MAS_GRANDE, NUMERO_DE_LA_VENTA_GRANDE, PRODUCTO = 0,1,2
+
+CAT1_TOTAL, CAT2_TOTAL, CAT3_TOTAL, CAT4_TOTAL = 0,1,2,3
+
+METODO_EFECTIVO, METODO_DEBITO, METODO_CREDITO = 0,1,2
+
+#------------ HISTORIAL DE VENTAS, CONSTANTES + RANKING - END -------------#
+
 #------------ ORDENAMIENTO - START -------------#
 
 def ord_insercion(lista, campo, descendiente = False):
+    """
+    Función reutilizable que ordena los elementos de una lista por el método de inserción.
+    
+    Recibe: lista (list), campo (int), descendiente (booleano)
+
+    Devuelve: No devuelve ningún valor. Modifica a la lista.
+
+    Pre: los elementos de la lista deben ser comparables, además, se debe indicar el campo 
+    por el cual se ordenará (este debe de ser un número) y de qué forma ordenar (descendiente o ascendiente)
+    
+    Post: La lista queda ordenada según el campo elegido.
+    """
     for i in range(1, len(lista)):
         v = lista[i]
         j = i - 1
@@ -84,12 +108,26 @@ def ord_insercion(lista, campo, descendiente = False):
 #------------ BUSQUEDA - START -------------#
 
 def buscar_por_codigo(lista, producto):
+    """ Función que realiza la búsqueda de un elemento mediante el método de busqueda binaria.
+        
+        Recibe: lista (list), producto (int)
+
+        Devuelve: devuelve la lista que contenga el códgio del producto buscado, en caso de no 
+        encontraro, devuelve -1.
+
+        Pre: La lista debe estar ordenada. El código debe de exisitir o debe de encontrarse dentro
+        dentro de la categoría. El código debe de ser un entero.
+
+        Post: Devuelve lista[medio], que es el producto para 
+        utilizarse en el registro de una venta, la búsqueda de un producto por nombre o el registro
+        de un producto nuevo. Si no existe, devuelve -1
+    """
     izq = 0
     der = len(lista) - 1
     while izq <= der:
         medio = (izq + der) // 2
         if lista[medio][CODIGO] == producto:
-            return medio
+            return lista[medio]
         elif lista[medio][CODIGO] > producto:
             der = medio - 1
         else:
@@ -101,11 +139,16 @@ def buscar_por_codigo(lista, producto):
 #------------ OPCIONES DEL MENU - START -------------#
 
 def pedir_numero(mensaje, min, max):
-    """Función reutilizable que pide un número en un rango al usuario hasta que sea válido.
+    """
+    Función reutilizable que pide un número en un rango al usuario hasta que sea válido.
 
-    Recibe: mensaje (str) a mostrar, minimo (int) y máximo (int) permitido del número
+    Recibe: Mensaje (str) a mostrar, minimo (int) y máximo (int) permitido del número
     
-    Devuelve: el número ya validado dentro de el rango (int)
+    Devuelve: El número ya validado dentro de el rango (int)
+
+    Pre: Mensaje debe ser un dígito y debe de estar entre max y min. Max y Min deben ser enteros.
+
+    Post: Devuelve el número entero. El número cumple con ser menor que max y mayor que min.
 
     ."""
     entrada = input(mensaje)
@@ -119,9 +162,16 @@ def descuento_monto(precio, cantidad):
 
     Recibe: precio (int) y cantidad (int)
     
-    Devuelve: subtotal (variable sin el descuento aplicado) (int), descuento (float),
+    Devuelve:
+        Tupla. subtotal (variable sin el descuento aplicado) (int), descuento (float),
     subtotal_d (variable con el descuento aplicado) (float)
     
+    Pre: Precio y cantidad deben ser un entero. MONTO MINIMIO DESCUENTO debe de estar previamente
+    definido, así como PORCENTAJE DESCUENTO MONTO. 
+
+    Post: El subtotal debe de ser mayor al monto mínimo para recibir un descuento, si no, no recibe
+    descuento. Devuelve la tupla.
+
     ."""
     descuento = 0
     subtotal = precio * cantidad
@@ -134,10 +184,16 @@ def descuento_monto(precio, cantidad):
 def ajuste_medio_pago(subtotal_d, medio_pago):
     """Realiza el ajuste según el medio de pago ingresado.
 
-    Recibe: subtotal_d (Subtotal con descuento de monto aplicado) (float), medio_pago (int)
+    Recibe: Subtotal_d (Subtotal con descuento de monto aplicado) (float), medio_pago (int)
     
     Devuelve: Importe final (float), descuento por efectivo (float), recargo por crédito (float)
     
+    Pre: Medio de pago debe de ser 1 o 3 para recibir descuento ya sea en efectivo o crédito.
+
+    Post: Devuelve el importe final con descuento en efectivo si el método de pago es con efectivo o
+    devuelve el importe final con descuento en crédito si el método de pago es con crédito. Además,
+    devuelve una tupla con el importe final, el descuento y el recargo.
+
     ."""
     importe_final = subtotal_d
     descuento_efectivo = 0
@@ -151,7 +207,20 @@ def ajuste_medio_pago(subtotal_d, medio_pago):
     return importe_final, descuento_efectivo, recargo
 
 def mostrar_ticket(cantidad, precio, nombre_producto, medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo, nro_venta):
-    """Muestra en pantalla el ticket con toda la información calculada por las otras funciones"""
+    """
+    
+    Muestra en pantalla el ticket con toda la información calculada por las otras funciones
+
+    Recibe: cantidad (int), precio (float), nombre_producto (str), medio_pago (int), subtotal (float), subtotal_d (Subtotal con descuento de monto aplicado), descuento (float), descuento_efectivo (float), recargo (flotat), importe_final (float), nro_venta (int)
+
+    Devuelve: No devuelve nada. Muestra el ticket en pantalla.
+
+    Pre: Se debe de realizar una venta.
+
+    Post: Muestra en pantalla un ticket con los datos de la venta informando descuento o recargos
+    correspondientes al medio de pago.
+    
+    """
     
     print("============ TICKET ============")
     print(f"Venta N° {nro_venta}")
@@ -169,17 +238,28 @@ def mostrar_ticket(cantidad, precio, nombre_producto, medio_pago, subtotal, subt
     print("================================")
 
 def registrar_venta(catalogo, historial_ventas):
-    cod = pedir_numero("Ingrese el codigo de otro producto (Ingrese 0 para cancelar): ", 0 , maximo_catalogo(catalogo)) 
+    """ 
+        Función que registra la venta de un producto.
+
+        Recibe: catalogo (int), historial de ventas (list)
+
+        Devuelve: No devuelve nada. Agrega las ventas a la lista.
+        
+        Pre: El catálogo debe estar ordenado.
+        
+        Post: Se emite el ticket y la venta se agrega al historial de ventas.
+    """
+    cod = pedir_numero("Ingrese el codigo de otro producto (Ingrese 0 para cancelar): ", 0 , float('inf')) 
     while cod != 0:
         producto = buscar_por_codigo(catalogo, cod)
         if producto != -1:
-            if catalogo[producto][STOCK] != 0:
-                print(f"Nombre: {catalogo[producto][NOMBRE]}")
+            if producto[STOCK] != 0:
+                print(f"Nombre: {producto[NOMBRE]}")
 
-                print(f"Precio: ${formatear_importe(catalogo[producto][PRECIO])}")
-                print(f"Stock: {catalogo[producto][STOCK]} unidades")
+                print(f"Precio: ${formatear_importe(producto[PRECIO])}")
+                print(f"Stock: {producto[STOCK]} unidades")
 
-                cantidad = pedir_numero("Ingrese la cantidad: ", 1, catalogo[producto][STOCK])
+                cantidad = pedir_numero("Ingrese la cantidad: ", 1, producto[STOCK])
 
                 print("============")
                 print("1. Efectivo")
@@ -189,31 +269,38 @@ def registrar_venta(catalogo, historial_ventas):
 
                 num_ventas = len(historial_ventas) + 1
 
-                subtotal, descuento, subtotal_d = descuento_monto(catalogo[producto][PRECIO], cantidad)
+                subtotal, descuento, subtotal_d = descuento_monto(producto[PRECIO], cantidad)
                 importe_final, descuento_efectivo, recargo = ajuste_medio_pago(subtotal_d, medio_pago)
                 codigo = codigo_suerte(int(importe_final))
-                mostrar_ticket(cantidad, catalogo[producto][PRECIO], catalogo[producto][NOMBRE], medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo, num_ventas)
+                mostrar_ticket(cantidad, producto[PRECIO], producto[NOMBRE], medio_pago, subtotal, subtotal_d, descuento, descuento_efectivo, recargo, importe_final, codigo, num_ventas)
 
-                print(f"AVISO: El stock de {catalogo[producto][NOMBRE]} pasa de {catalogo[producto][STOCK]} a {catalogo[producto][STOCK] - cantidad}")
-                catalogo[producto][STOCK] -= cantidad
-                venta = num_ventas, catalogo[producto][CODIGO], cantidad, medio_pago, importe_final
+                print(f"AVISO: El stock de {producto[NOMBRE]} pasa de {producto[STOCK]} a {producto[STOCK] - cantidad}")
+                producto[STOCK] -= cantidad
+                venta = num_ventas, producto[CODIGO], cantidad, medio_pago, importe_final
                 historial_ventas.append(venta)
                 break
             else:
                 print()
-                print(f"Producto sin stock (es necesario reponer: '{catalogo[producto][NOMBRE]}')")
-                cod = pedir_numero("Ingrese el codigo de otro producto (Ingrese 0 para cancelar): ", 0 , maximo_catalogo(catalogo)) 
+                print(f"Producto sin stock (es necesario reponer: '{producto[NOMBRE]}')")
+                cod = pedir_numero("Ingrese el codigo de otro producto (Ingrese 0 para cancelar): ", 0 , float('inf')) 
         else:
             print()
-            print("Producto no encontrado")
-            cod = pedir_numero("Ingrese el codigo del producto (Ingrese 0 para cancelar): ", 0 , maximo_catalogo(catalogo)) 
-
-def maximo_catalogo(catalogo):
-    ord_insercion(catalogo,CODIGO,False)
-    codigo = catalogo[-1][CODIGO]
-    return codigo
+            print("El código ingresado no existe")
+            cod = pedir_numero("Ingrese el codigo del producto (Ingrese 0 para cancelar): ", 0 , float('inf')) 
 
 def armar_ranking(catalogo, historial_ventas):
+    """ 
+        Función que permite generar el ranking de los productos más vendidos en el día
+
+        Recibe: catálogo (list), historial de venta (list)
+
+        Devuelve: El ranking de los productos más vendidos en el día.
+        
+        Pre: El catálogo debe estar ordenado, el historial de ventas debe poseer al menos un elemento
+        
+        Post: Devuelve el ranking de ventas donde cada elemento posee el nombre del producto, las
+        unidades vendidas su  monto total
+    ."""
     ranking = []
 
     for i in range(len(catalogo)):
@@ -235,11 +322,15 @@ def mostrar_resumen(catalogo, historial_ventas):
     """
     Muestra el resumen de las ventas realizado el día de hoy.
     
-    Recibe: las variables acumuladas.
+    Recibe: catálogo (list), historial_ventas (list)
     
-    Devuelve: imprime el resumen del día con las variables acumuladas solo si se realizaron ventas y devuelve las variables acumuladas. Caso contrario, solo muestra "Aún no se realizaron 
-    ingresos" y devuelve las variables acumuladas.
+    Devuelve: No devuelve nada. Imprime el resumen del día solo si hay ventas, en caso de que
+    no existan ventas, imprime "Aún no se realizaron ingresos" para evitar división por cero.
     
+    Pre: Deben de existir ventas para imprimir el resumen del día.
+
+    Post: Imprime el resumen del día o el mensaje de que aún no se realizaron ingresos.
+
     ."""
     print(" ")
     print("===========================================================================")
@@ -252,23 +343,48 @@ def mostrar_resumen(catalogo, historial_ventas):
 
 def salir(catalogo, historial_ventas):
     """
-    Muestra el resumen del día, realiza la cuenta atrás y sale del sistema solo si don Ramón acepta nuevamente el cierre del sistema.
+    Muestra el resumen del día, realiza la cuenta atrás y sale del sistema solo si don Ramón confirma el cierre del sistema.
     
-    Recibe: las variables acumuladas para mostrarlas si se realizaron ventas.
+    Recibe: Catálogo (list), historial de ventas (list).
     
-    Devuelve: imprime el resumen del día, la cuenta regresiva y sale del sistema devolviendo las variables acumuladas.
+    Devuelve: Devuelve 6 si acepta cerrar el programa e imprime el resumen del día, la cuenta regresiva. Devuelve 
+    0 si desea continuar, sin mostrar nada en el proceso.
     
+    Pre: Historial de ventas debe tener ventas realizadas para ejecutar el resumen del día e imprimirr
+    ranking. El usuario debe escribir Sí\si\s para contiunar con el cierre.
+
+    Post: Se cierra el programa mostrando el resumen del día (si las hay), los productos a reponer (si los hay) y
+    el ranking (si los hay) de ventas.
     ."""
     print("")
     opcion = verificar_cierre()
     if opcion == 6:
         if verificar_entradas(len(historial_ventas)):
+            print("=====================================================================================")
             resumen_del_dia(catalogo, historial_ventas)
+            print("=====================================================================================")
+            lista = productos_reponer(catalogo)
+            if lista:
+                mostrar_repone(lista)
+            else:
+                print("No hay productos a reponer")
+            print("=====================================================================================")
+            imprimir_ranking(catalogo, historial_ventas)
+            print("=====================================================================================")
+            print(" ")
         else:
             print(" ")
-            print("===================================================================")
+            print("=====================================================================================")
             print("No se realizaron ventas este día.")
-            print("===================================================================")
+            print("=====================================================================================")
+            lista = productos_reponer(catalogo)
+            if lista:
+                mostrar_repone(lista)
+            else:
+                print("No hay productos a reponer")
+            print("=====================================================================================")
+            imprimir_ranking(catalogo, historial_ventas)
+            print("=====================================================================================")
             print(" ")
         print(cuenta_regresiva(5))
         return opcion
@@ -287,6 +403,11 @@ def codigo_suerte(importe):
     
     Devuelve: Codigo de la suerte (int)
     
+    Pre: importe debe de ser entero y mayor o igual a cero.
+
+    Post: Devuelve un único dígito que surge de la suma repetida de los dígitos de importe,
+    si importe es 0, devuelve 0
+
     ."""
     if importe < 10:
         return importe
@@ -303,6 +424,12 @@ def verificar_cierre():
     Recibe: no recibe parámetros.
     
     Devuelve: el número correspondiente a la opción elegida.
+
+    Pre: El usuario debe poder ingresar texto por teclado.
+
+    Post: La función no finaliza si no recibe una entrada correcta, esta acpeta
+    "S","s","si","Si","Sí" y "sí", a su vez acepta "n","N","No" y "no". Devuelve 6 cuando
+    se confirma el cierre, cero cuando no se confirma el cierre.
     
     ."""
     continuar = input("¿Desea continuar con el cierre? (Si/No): ").lower().strip()
@@ -326,6 +453,11 @@ def cuenta_regresiva(cuenta):
     
     Devuelve: 'Caja cerrada'
     
+    Pre: Cuenta debe ser un número entero mayor a 0. mostrar cuenta debe de estar definida
+
+    Post: Muestra mediante mostrar cuenta la cuenta regresiva hasta que llegue a cero y devuelva
+    "¡Caja cerrada!"
+
     ."""
     if cuenta == 0:
         return "¡Caja cerrada!"
@@ -350,10 +482,13 @@ def mostrar_cuenta(cuenta):
     """
     Muestra los números de la cuenta atrás.
 
-    Recibe el parámetro cuenta que viene desde 'cuenta_regresiva'.
+    Recibe: El parámetro cuenta que viene desde 'cuenta_regresiva'.
     
-    Devuelve: no devuelve ningún valor (solo imprime el número).
+    Devuelve: No devuelve ningún valor (solo imprime el número).
     
+    Pre: Debe de contener algo.
+
+    Post: Imprime el valor que contenga cuenta sin modificar el valor recibido.
     ."""
     print(cuenta)
 
@@ -367,8 +502,12 @@ def verificar_entradas(cantidad):
     
     Recibe: cantidad (int).
     
-    Devuelve: True si la cantidad es mayor a 0. False si la cantidad es menor a 0.
+    Devuelve: True si la cantidad es mayor a 0. False si la cantidad es menor o igual a 0.
     
+    Pre: cantidad debe ser mayor a 0 y un número entero.
+
+    Post: Retorna Ture si es mayor a 0. False si es mayor o igual.
+
     ."""
     
     return cantidad > 0
@@ -376,31 +515,59 @@ def verificar_entradas(cantidad):
 #------------ ACUMULADOR - START -------------#
 
 def acumulador(catalogo, historial_ventas, acumuladores, venta_mas_grande, recaudado_por_categoria, cantidad_de_ventas_medio_pago):
-    venta_mas_grande[0] = historial_ventas[0][IMPORTE_FINAL]
-    venta_mas_grande[1] = historial_ventas[0][NRO_VENTA]
-    posicion = buscar_por_codigo(catalogo,historial_ventas[0][COD_PROD])
-    venta_mas_grande[2] =  catalogo[posicion][NOMBRE]
+    """
+        Obtiene los valores de cada venta para acumularlos en sus listas correspondientes para luego
+        ser imprimidos en resumen del día
+
+        Recibe: catálogo (list), historial_ventas (list), acumuladores (list), venta_mas_grande (list), recaudado_por_categoria (list), cantidad_de_ventas_medio_pago
+
+        Devuelve: No devuelve nada. Modifica cada lista con sus datos correspondientes.
+
+        Pre: Las listas deben de estar definidas y no ser globales. Historial de ventas no debe ser 0. Historial ventas debe
+        estar ordenado. Obtener datos venta debe estar definida.
+
+        Post: Obtiene los valores de cada lista y los acumula o almacena en sus listas correspondientes sin devolver ningún valor.
+        
+        """
+
+    venta_mas_grande[VENTA_MAS_GRANDE] = historial_ventas[0][IMPORTE_FINAL]
+    venta_mas_grande[NUMERO_DE_LA_VENTA_GRANDE] = historial_ventas[0][NRO_VENTA]
+    producto = buscar_por_codigo(catalogo,historial_ventas[0][COD_PROD])
+    venta_mas_grande[PRODUCTO] =  producto[NOMBRE]
     for i in range(len(historial_ventas)):
-        acumuladores[1] += historial_ventas[i][IMPORTE_FINAL]
-        if historial_ventas[i][IMPORTE_FINAL] > venta_mas_grande[0]:
-            venta_mas_grande[0] = historial_ventas[i][IMPORTE_FINAL]
-            venta_mas_grande[1] = historial_ventas[i][NRO_VENTA]
-            posicion = buscar_por_codigo(catalogo,historial_ventas[i][COD_PROD])
-            venta_mas_grande[2] = catalogo[posicion][NOMBRE]
+        acumuladores[TOTAL_RECAUDADO] += historial_ventas[i][IMPORTE_FINAL]
+        if historial_ventas[i][IMPORTE_FINAL] > venta_mas_grande[VENTA_MAS_GRANDE]:
+            venta_mas_grande[VENTA_MAS_GRANDE] = historial_ventas[i][IMPORTE_FINAL]
+            venta_mas_grande[NUMERO_DE_LA_VENTA_GRANDE] = historial_ventas[i][NRO_VENTA]
+            producto = buscar_por_codigo(catalogo,historial_ventas[i][COD_PROD])
+            venta_mas_grande[PRODUCTO] = producto[NOMBRE]
         categoria, medio_pago, importe = obtener_datos_venta(i,catalogo, historial_ventas)
         recaudado_por_categoria[categoria - 1] += importe
         cantidad_de_ventas_medio_pago[medio_pago - 1] += 1
-    acumuladores[0] = len(historial_ventas)
-    acumuladores[2] = acumuladores[1]/acumuladores[0]
-
+    acumuladores[CANTIDAD_VENTAS] = len(historial_ventas)
+    acumuladores[IMPORTE_PROMEDIO] = acumuladores[TOTAL_RECAUDADO]/acumuladores[CANTIDAD_VENTAS]
 
 #------------ ACUMULADOR DE CATEGORIA - START -------------#
 
 def obtener_datos_venta(i, catalogo, historial_ventas):
-    venta = historial_ventas[i] # num_ventas, producto[CODIGO], cantidad, medio_pago, importe_final
+    """
+        Obtiene la categoría, el medio de pago y el importe final correspondiente a una venta.
 
-    posicion = buscar_por_codigo(catalogo, venta[COD_PROD])
-    producto = catalogo[posicion]
+        Recibe: i (int), catálogo (list), historial ventas (list)
+
+        Devuelve: Tupla. Categoría, medio de pago e importe.
+
+        Pre: i debe ser un entero y un índice válido de historial de ventas. La venta que se 
+        ubica en el historial de ventas debe tener el formato esperado. El código debe existir
+        en el catálogo.
+
+        Post: Devuelve la categoría del producto vendido. Devuelve el medio de pago usado. 
+        Devuelve el importe final de la venta. No modifica el catálogo ni el historial de ventas.
+    
+    """
+    venta = historial_ventas[i] 
+
+    producto = buscar_por_codigo(catalogo, venta[COD_PROD])
 
     categoria = producto[CATEGORIA]
     medio_pago = venta[MEDIO_PAGO]
@@ -419,11 +586,14 @@ def formatear_importe(importe):
     """
     Formatea un importe con separador de miles '.' y decimales ','.
 
-    Pre:
-        - importe es un número.
+    Recibe: Importe (float)
 
-    Post:
-        - Devuelve el importe con formato argentino.
+    Devuelve: importe con decimales, punto como separador de miles y coma como separador decimal.
+
+    Pre: importe es un número.
+
+    Post: Devuelve el importe con formato argentino. Utiliza "." como separador de miles y "," como 
+    separado decimal.
     """
     importe = f"{importe:,.2f}"
     importe = importe.replace(",", "X")
@@ -438,23 +608,19 @@ def resumen_del_dia(catalogo, historial_ventas):
     """
     Se encarga de mostrar de forma ordenada las ventas, el total recaudado, qué método de pago fue el más usado y el total recaudado por cada categoría en el día.
     
-    Recibe: las variables acumuladas a mostar de forma organizada.
+    Recibe: catálogo (list), historial de ventas (list).
     
-    Devuelve: no devuelve nada (imprime una lista ordenada).
+    Devuelve: no devuelve nada. Imprime una lista ordenada.
 
-    Pre:
-        - catalogo contiene productos válidos.
-        - historial_ventas contiene ventas válidas.
+    Pre: catálogo contiene productos válidos. Historial_ventas contiene ventas válidas.
 
-    Post:
-        - Si no hay ventas, informa que no hay ventas.
-        - Si hay ventas, muestra el resumen completo.
+    Post: Si no hay ventas, informa que no hay ventas. Si hay ventas, muestra el resumen completo.
     
     ."""
     acumuladores = [
         0,      #   Cantidad de ventas
         0,      #   Total recaudado
-        0,      #   Importe promedio
+        0       #   Importe promedio
     ]
 
     venta_mas_grande = [
@@ -480,67 +646,107 @@ def resumen_del_dia(catalogo, historial_ventas):
 
     print(" ")
     print("========= Ventas realizadas y total recaudado ==========")
-    print(f"Ventas: {acumuladores[0]}")
-    print(f"Recaudado: ${formatear_importe(acumuladores[1])}")
-    print(f"Importe promedio por venta: ${formatear_importe(acumuladores[2])}")
+    print(f"Ventas: {acumuladores[CANTIDAD_VENTAS]}")
+    print(f"Recaudado: ${formatear_importe(acumuladores[TOTAL_RECAUDADO])}")
+    print(f"Importe promedio por venta: ${formatear_importe(acumuladores[IMPORTE_PROMEDIO])}")
     print("================= Venta más grande =====================")
-    print(f"Número de la venta: {venta_mas_grande[1]}")
-    print(f"Nombre del producto: {venta_mas_grande[2]}")
-    print(f"Importe de la venta: ${formatear_importe(venta_mas_grande[0])}")
+    print(f"Número de la venta: {venta_mas_grande[NUMERO_DE_LA_VENTA_GRANDE]}")
+    print(f"Nombre del producto: {venta_mas_grande[PRODUCTO]}")
+    print(f"Importe de la venta: ${formatear_importe(venta_mas_grande[VENTA_MAS_GRANDE])}")
     print("===================================================================")
     print(f"Total recaudado por cada categoría de producto")
-    if recaudado_por_categoria[0] == 0:
+    if recaudado_por_categoria[CAT1_TOTAL] == 0:
         print(f"Golosinas: No hay ventas de este tipo.")
     else:
-        print(f"Golosinas: ${formatear_importe(recaudado_por_categoria[0])}")
-    if recaudado_por_categoria[1] == 0:
+        print(f"Golosinas: ${formatear_importe(recaudado_por_categoria[CAT1_TOTAL])}")
+    if recaudado_por_categoria[CAT2_TOTAL] == 0:
         print(f"Bebidas: No hay ventas de este tipo.")
     else:
-        print(f"Bebidas: ${formatear_importe(recaudado_por_categoria[1])}")
-    if recaudado_por_categoria[2] == 0:
+        print(f"Bebidas: ${formatear_importe(recaudado_por_categoria[CAT2_TOTAL])}")
+    if recaudado_por_categoria[CAT3_TOTAL] == 0:
         print(f"Almacén: No hay ventas de este tipo.")
     else:
-        print(f"Almacén: ${formatear_importe(recaudado_por_categoria[2])}")
-    if recaudado_por_categoria[3] == 0:
+        print(f"Almacén: ${formatear_importe(recaudado_por_categoria[CAT3_TOTAL])}")
+    if recaudado_por_categoria[CAT4_TOTAL] == 0:
         print(f"Librería: No hay ventas de este tipo.")
     else:
-        print(f"Librería: ${formatear_importe(recaudado_por_categoria[3])}")
+        print(f"Librería: ${formatear_importe(recaudado_por_categoria[CAT4_TOTAL])}")
     print("===================================================================")
     print("Cantidad de ventas por cada medio de pago")
-    print(f"Efectivo: {cantidad_de_ventas_medio_pago[0] if cantidad_de_ventas_medio_pago[0] != 0 else 'No se realizaron ventas con este método'}")
-    print(f"Débito: {cantidad_de_ventas_medio_pago[1] if cantidad_de_ventas_medio_pago[1] != 0 else 'No se realizaron ventas con este método'}")
-    print(f"Crédito: {cantidad_de_ventas_medio_pago[2] if cantidad_de_ventas_medio_pago[2] != 0 else 'No se realizaron ventas con este método'}")
-    if cantidad_de_ventas_medio_pago[2] == cantidad_de_ventas_medio_pago[1] and cantidad_de_ventas_medio_pago[2] == cantidad_de_ventas_medio_pago[0]:
+    print(f"Efectivo: {cantidad_de_ventas_medio_pago[METODO_EFECTIVO] if cantidad_de_ventas_medio_pago[METODO_EFECTIVO] != 0 else 'No se realizaron ventas con este método'}")
+    print(f"Débito: {cantidad_de_ventas_medio_pago[METODO_DEBITO] if cantidad_de_ventas_medio_pago[METODO_DEBITO] != 0 else 'No se realizaron ventas con este método'}")
+    print(f"Crédito: {cantidad_de_ventas_medio_pago[METODO_CREDITO] if cantidad_de_ventas_medio_pago[METODO_CREDITO] != 0 else 'No se realizaron ventas con este método'}")
+    if cantidad_de_ventas_medio_pago[METODO_CREDITO] == cantidad_de_ventas_medio_pago[METODO_DEBITO] and cantidad_de_ventas_medio_pago[METODO_CREDITO] == cantidad_de_ventas_medio_pago[METODO_EFECTIVO]:
         print("Los tres tienen un mismo uso")
-        print(f"Efectivo {cantidad_de_ventas_medio_pago[0]} uso/s, Débito {cantidad_de_ventas_medio_pago[1]} uso/s y Crédito {cantidad_de_ventas_medio_pago[2]} uso/s")
+        print(f"Efectivo {cantidad_de_ventas_medio_pago[METODO_EFECTIVO]} uso/s, Débito {cantidad_de_ventas_medio_pago[METODO_DEBITO]} uso/s y Crédito {cantidad_de_ventas_medio_pago[METODO_CREDITO]} uso/s")
     else:
-        if cantidad_de_ventas_medio_pago[0] >= cantidad_de_ventas_medio_pago[1] and cantidad_de_ventas_medio_pago[0] >= cantidad_de_ventas_medio_pago[2]:
-            if cantidad_de_ventas_medio_pago[0] == cantidad_de_ventas_medio_pago[1]:
+        if cantidad_de_ventas_medio_pago[METODO_EFECTIVO] >= cantidad_de_ventas_medio_pago[METODO_DEBITO] and cantidad_de_ventas_medio_pago[METODO_EFECTIVO] >= cantidad_de_ventas_medio_pago[METODO_CREDITO]:
+            if cantidad_de_ventas_medio_pago[METODO_EFECTIVO] == cantidad_de_ventas_medio_pago[METODO_DEBITO]:
                 print("Los más usados fueron")
-                print(f"Efectivo {cantidad_de_ventas_medio_pago[0]} uso/s y Débito {cantidad_de_ventas_medio_pago[1]} uso/s")
-            elif cantidad_de_ventas_medio_pago[0] == cantidad_de_ventas_medio_pago[2]:
+                print(f"Efectivo {cantidad_de_ventas_medio_pago[METODO_EFECTIVO]} uso/s y Débito {cantidad_de_ventas_medio_pago[METODO_DEBITO]} uso/s")
+            elif cantidad_de_ventas_medio_pago[METODO_EFECTIVO] == cantidad_de_ventas_medio_pago[METODO_CREDITO]:
                 print("Los más usados fueron")
-                print(f"Efectivo {cantidad_de_ventas_medio_pago[0]} uso/s y Crédito {cantidad_de_ventas_medio_pago[2]} uso/s")
+                print(f"Efectivo {cantidad_de_ventas_medio_pago[METODO_EFECTIVO]} uso/s y Crédito {cantidad_de_ventas_medio_pago[METODO_CREDITO]} uso/s")
             else:
                 print("El que más veces se usó fue")
-                print(f"Efectivo con {cantidad_de_ventas_medio_pago[0]} uso/s")
-        elif cantidad_de_ventas_medio_pago[1] >= cantidad_de_ventas_medio_pago[0] and cantidad_de_ventas_medio_pago[1] >= cantidad_de_ventas_medio_pago[2]:
-            if cantidad_de_ventas_medio_pago[1] == cantidad_de_ventas_medio_pago[2]:
+                print(f"Efectivo con {cantidad_de_ventas_medio_pago[METODO_EFECTIVO]} uso/s")
+        elif cantidad_de_ventas_medio_pago[METODO_DEBITO] >= cantidad_de_ventas_medio_pago[METODO_EFECTIVO] and cantidad_de_ventas_medio_pago[METODO_DEBITO] >= cantidad_de_ventas_medio_pago[METODO_CREDITO]:
+            if cantidad_de_ventas_medio_pago[METODO_DEBITO] == cantidad_de_ventas_medio_pago[METODO_CREDITO]:
                 print("Los más usados fueron")
-                print(f"Débito {cantidad_de_ventas_medio_pago[1]} uso/s y Crédito {cantidad_de_ventas_medio_pago[2]} uso/s")
+                print(f"Débito {cantidad_de_ventas_medio_pago[METODO_DEBITO]} uso/s y Crédito {cantidad_de_ventas_medio_pago[METODO_CREDITO]} uso/s")
             else:
                 print("El que más veces se usó fue")
-                print(f"Débito con {cantidad_de_ventas_medio_pago[1]} uso/s")
-        elif cantidad_de_ventas_medio_pago[2] >= cantidad_de_ventas_medio_pago[0] and cantidad_de_ventas_medio_pago[2] >= cantidad_de_ventas_medio_pago[1]:
+                print(f"Débito con {cantidad_de_ventas_medio_pago[METODO_DEBITO]} uso/s")
+        elif cantidad_de_ventas_medio_pago[METODO_CREDITO] >= cantidad_de_ventas_medio_pago[METODO_EFECTIVO] and cantidad_de_ventas_medio_pago[METODO_CREDITO] >= cantidad_de_ventas_medio_pago[METODO_DEBITO]:
             print("El que más veces se usó fue")
-            print(f"Crédito con {cantidad_de_ventas_medio_pago[2]} uso/s")
+            print(f"Crédito con {cantidad_de_ventas_medio_pago[METODO_CREDITO]} uso/s")
     print("===================================================================")
 
 #------------ RESUMEN DEL DIA - END -------------#
 
 #------------ FUNCIONALIDADES DEL MENU - START -------------#
 
+
+def imprimir_ranking(catalogo, historial_ventas):
+    """
+        Construye mediante armar ranking el ranking de los productos más vendidos en el día y lo imprime
+
+        Recibe: Catálogo (list), historial de ventas (list)
+        
+        Devuelve: No devuelve nada. 
+
+        Pre: Historial de ventas debe contener una o más ventas. Armar ranking debe de estar definido.
+        Ordenar insercion debe de estar definida. 
+
+        Post: Se imprime el ranking del día si hay más de una o más ventas e imprime el ranking.
+        Si no hay ventas, imprime el mensaje c "No se han registrado ventas el dia de hoy"
+    """
+
+    if len(historial_ventas) == 0:
+        print("No se han registrado ventas el dia de hoy")
+    else:
+        ranking = armar_ranking(catalogo, historial_ventas)
+        ord_insercion(ranking, RANK_CANT, True)
+        print("=== RANKING DEL DIA ===")
+        for i in range(len(ranking)):
+            print(f"{i+1}. {ranking[i][RANK_NOM]} | {ranking[i][RANK_CANT]} un. | ${ranking[i][RANK_IMP]:.2f}")
+    
 def armar_matriz(catalogo, historial_ventas):
+    """
+        Construye la matriz con la recaudación por categoría y medio de pago.
+
+        Recibe: catálogo (list), historial de ventas (list)
+
+        Devuelve: list. Matriz de 4 filas y 3 columnas. Cada fila representa una categoría
+        y cada columna representa un medio de pago. Cada posición contiene el importe total 
+        recaudado.
+
+        Pre: catálogo debe de estar ordenado por códgio de producto.
+
+        Post: Se acumulan las ventas en las posiciones correspondientes a su categoría y medio de pago.
+
+    """
+
     matriz = [
         [0,0,0],
         [0,0,0],
@@ -549,9 +755,8 @@ def armar_matriz(catalogo, historial_ventas):
     ]
 
     for i in range(len(historial_ventas)):
-        posicion = buscar_por_codigo(catalogo,historial_ventas[i][COD_PROD])
+        producto = buscar_por_codigo(catalogo,historial_ventas[i][COD_PROD])
 
-        producto = catalogo[posicion]
         categoria = producto[CATEGORIA]
         medio_pago = historial_ventas[i][MEDIO_PAGO]
         importe = historial_ventas[i][IMPORTE_FINAL]
@@ -561,6 +766,19 @@ def armar_matriz(catalogo, historial_ventas):
     return matriz
 
 def mostrar_matriz(catalogo, historial_ventas):
+    """
+        Muestra por pantalla la recaudación total agrupada por categoría y medio de pago.
+
+        Recibe: catálogo (list), historial de ventas (list)
+
+        Pre: catálogo debe estar ordenado por código de producto. Armar matriz debe estar 
+        definida y devuelve una matriz de 4 filas y 3 columnas. Formatear importe está definida
+        y recibe el importe.
+
+        Post: Se muestra por la pantalla la matriz con la recaudación de cáda categoría según el
+        método de pago sin modificar al catálogo ni al hisotrial de ventas.
+    """
+
     matriz = armar_matriz(catalogo, historial_ventas)
 
     nombre_categoria = [
@@ -585,6 +803,7 @@ def mostrar_matriz(catalogo, historial_ventas):
     total_general = [
         0
     ]
+
     print()
     print("Categoría       ___Efectivo_________Débito_________Crédito_________TOTAL")
 
@@ -613,10 +832,77 @@ def mostrar_matriz(catalogo, historial_ventas):
     )
     print()
 
+def productos_reponer(catalogo):
+    """
+        Construye la lista con los stock que necesitan reposición
 
-#------------ FUNCIONALIDADES DEL MENU - END -------------#
+        Recibe: catálogo (list)
 
-#------------ FUNCIONALIDADES DEL MENU - START -------------#
+        Devuelve: No devuelve nada. 
+
+        Pre: Cada producto debe contener mínimo, su código, nombre, categoría, precio y stock. 
+        Catálogo debe estar ordenado por stock de forma ascendiente. Ordenar insercion está
+        definida.
+
+        Post: El catálogo queda ordenado de forma ascendente. Retorna la lista con los valores que se obtienen de catálogo. Ordena
+        nuevamente por código de forma ascendente 
+    """
+    lista = []
+    ord_insercion(catalogo,STOCK,False)
+    for i in range(len(catalogo)):
+        if catalogo[i][STOCK] < STOCK_MINIMO:
+            lista.append([
+                catalogo[i][CODIGO],
+                catalogo[i][NOMBRE],
+                CATEGORIAS[catalogo[i][CATEGORIA] - 1],
+                catalogo[i][PRECIO],
+                catalogo[i][STOCK],
+                "¡REPONER!"])
+    ord_insercion(catalogo, CODIGO, False)
+    return lista
+
+def mostrar_repone(lista):
+    """
+        Muestra por pantalla los productos cuyo stock es menor al mínimo establecido.
+
+        Recibe: catálogo (list)
+
+        Devuelve: No devuelve nada. Muestra información por pantalla.
+
+        Pre: Lista debe contener elementos que cumplan con la condición de su stock menor al mínimo deseado.
+
+        Post: Imprime por código, nombre, categoría, precio y stock, a los productos que tienen menos del mínimo de stock deseado, avisandole
+        con la palabra "¡REPONER!" al lado derecho del stock.
+    """
+    print("Código    Nombre                      Categoría        Precio           Stock")
+    for i in range(len(lista)):
+        print(
+            f"|{lista[i][0]:<8}"
+            f"|{lista[i][1]:>20}"
+            f"|{lista[i][2]:>15}"
+            f"|{lista[i][3]:>13}"
+            f"|{lista[i][4]:>11}"
+            f"¡REPONER!"
+        )
+
+def busqueda_por_nombre(catalogo, historial_ventas, texto):
+    """
+    Busca productos cuyo nombre contenga el texto dado, sin distinguir mayúsculas.
+
+    Recibe: catalogo (list), texto (str)
+
+    Devuelve: lista de productos del catálogo cuyo nombre contiene el texto buscado.
+    
+    Lista vacía si no hay coincidencias.
+    """
+    coincidencias = 0
+    texto = input("Ingrese el producto a buscar: ").lower()
+    for i in range(len(catalogo)):
+        if texto in catalogo[i][NOMBRE].lower():
+            coincidencias = 1
+            print(catalogo[i][NOMBRE])
+    if coincidencias == 0:
+        print("No se hallaron coincidencias")
 
 def menu():
     """Menu principal donde se ingresan las opciones para registrar ventas, ver resumen del día y cerrar caja
@@ -654,25 +940,18 @@ def menu():
                         for i in range(len(catalogo)):
                             print(f"{catalogo[i][CODIGO]} | {catalogo[i][NOMBRE]} | {CATEGORIAS[catalogo[i][CATEGORIA] -1]} | ${formatear_importe(catalogo[i][PRECIO])} | {catalogo[i][STOCK]}")
                     elif opc == 2:
-                        cod = pedir_numero("Ingrese el código del producto a buscar: ", 1 , maximo_catalogo(catalogo)) 
+                        cod = pedir_numero("Ingrese el código del producto a buscar: ", 1 , float('inf')) 
                         producto = buscar_por_codigo(catalogo, cod)
                         if producto != -1:
-                            print(f"Codigo: {catalogo[producto][CODIGO]}")
-                            print(f"Nombre: {catalogo[producto][NOMBRE]}")
-                            print(f"Categoría: {CATEGORIAS[catalogo[producto][CATEGORIA] - 1]}")
-                            print(f"Precio: ${formatear_importe(catalogo[producto][PRECIO])}")
-                            print(f"Stock: {catalogo[producto][STOCK]} unidades")
+                            print(f"Codigo: {producto[CODIGO]}")
+                            print(f"Nombre: {producto[NOMBRE]}")
+                            print(f"Categoría: {CATEGORIAS[producto[CATEGORIA] - 1]}")
+                            print(f"Precio: ${formatear_importe(producto[PRECIO])}")
+                            print(f"Stock: {producto[STOCK]} unidades")
                         else:
                             print("El código ingresado no existe")
                     elif opc == 3:
-                        coincidencias = 0
-                        texto = input("Ingrese el producto a buscar: ").lower()
-                        for i in range(len(catalogo)):
-                            if texto in catalogo[i][NOMBRE].lower():
-                                coincidencias = 1
-                                print(catalogo[i][NOMBRE])
-                        if coincidencias == 0:
-                            print("No se hallaron coincidencias")
+                        busqueda_por_nombre(catalogo,historial_ventas,texto)
                     elif opc == 4:
                         reponer_prod = 0
                         for i in range(len(CATEGORIAS)):
@@ -712,15 +991,7 @@ def menu():
             case 3:
                 mostrar_resumen(catalogo, historial_ventas)
             case 4:
-                if len(historial_ventas) == 0:
-                    print("No se han registrado ventas el dia de hoy")
-                else:
-                    ranking = armar_ranking(catalogo, historial_ventas)
-                    ord_insercion(ranking, RANK_CANT, True)
-
-                    print("=== RANKING DEL DIA ===")
-                    for i in range(len(ranking)):
-                        print(f"{i+1}. {ranking[i][RANK_NOM]} | {ranking[i][RANK_CANT]} un. | ${ranking[i][RANK_IMP]:.2f}")
+                imprimir_ranking(catalogo,historial_ventas)
             case 5:
                 mostrar_matriz(catalogo, historial_ventas)
             case 6:
