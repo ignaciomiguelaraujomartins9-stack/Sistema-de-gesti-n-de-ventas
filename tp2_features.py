@@ -86,6 +86,12 @@ def ord_insercion(lista, campo, descendente):
     return lista
 
 def busqueda_binaria(lista, producto):
+    """ Función que realiza la búsqueda de un elemento mediante el método de busqueda binaria.
+        Pre: La lista debe estar ordenada.
+        Post: Devuelve lista[medio], que vendría siendo el producto para 
+        utilizarse en el registro de una venta, la búsqueda de un producto por nombre o el registro
+        de un producto nuevo.
+    """
     izq = 0
     der = len(lista) - 1
     while izq <= der:
@@ -99,6 +105,10 @@ def busqueda_binaria(lista, producto):
     return -1
 
 def registrar_venta(catalogo, historial_ventas):
+    """ Función que registra la venta de un producto.
+        Pre: El catálogo debe estar ordenado.
+        Post: Se emite el ticket y la venta se agrega al historial de ventas.
+    """
     cod = int(input("Ingrese el codigo del producto (Ingrese 0 para cancelar): "))
     while cod != 0:
         producto = busqueda_binaria(catalogo, cod)
@@ -133,6 +143,11 @@ def registrar_venta(catalogo, historial_ventas):
             cod = int(input("Ingrese el codigo del producto (Ingrese 0 para cancelar): "))
 
 def armar_ranking(catalogo, historial_ventas):
+    """ Función que permite generar el ranking de productos más vendidos en el día
+        Pre: El catálogo debe estar ordenado, el historial de ventas debe poseer al menos un elemento
+        Post: Devuelve el ranking de ventas donde cada elemento posee el nombre del producto, las
+        unidades vendidas su  monto total
+    ."""
     ranking = []
 
     for i in range(len(catalogo)):
@@ -320,6 +335,8 @@ def menu():
                     print("=== RANKING DEL DIA ===")
                     for i in range(len(ranking)):
                         print(f"{i+1}. {ranking[i][RANK_NOM]} | {ranking[i][RANK_CANT]} un. | ${ranking[i][RANK_IMP]:.2f}")
+            case _:
+                print("Opciones en construcción...")
                         
                     
                                     
