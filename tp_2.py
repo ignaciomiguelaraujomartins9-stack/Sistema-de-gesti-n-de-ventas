@@ -575,7 +575,6 @@ def obtener_datos_venta(i, catalogo, historial_ventas):
 
     return categoria, medio_pago, importe
 
-
 #------------ ACUMULADOR DE CATEGORIA  - END -------------#
 
 #------------ ACUMULADOR - END -------------#
@@ -885,7 +884,7 @@ def mostrar_repone(lista):
             f"¡REPONER!"
         )
 
-def busqueda_por_nombre(catalogo, historial_ventas, texto):
+def busqueda_por_nombre(catalogo, historial_ventas):
     """
     Busca productos cuyo nombre contenga el texto dado, sin distinguir mayúsculas.
 
@@ -951,7 +950,7 @@ def menu():
                         else:
                             print("El código ingresado no existe")
                     elif opc == 3:
-                        busqueda_por_nombre(catalogo,historial_ventas,texto)
+                        busqueda_por_nombre(catalogo,historial_ventas)
                     elif opc == 4:
                         reponer_prod = 0
                         for i in range(len(CATEGORIAS)):
@@ -970,6 +969,8 @@ def menu():
                             print("ERROR: El código no puede repetirse!")
                             codigo = pedir_numero("Ingrese el código del producto a agregar: ", 1 , float("inf"))
                         nombre = input("Ingrese el nombre del producto a agregar: ").capitalize().replace("  ", " ")
+                        while not nombre:
+                            nombre = input("ERROR, no puede quedar vacío. Ingrese el nombre del producto a agregar: ").capitalize().replace("  ", " ")
                         for i in range(len(CATEGORIAS)):
                             print(f"{i+1}) {CATEGORIAS[i]}")
                         categoria = pedir_numero("Ingrese la categoría a la que pertenece el producto: ", 1, 4)
